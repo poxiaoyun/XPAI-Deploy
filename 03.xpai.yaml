@@ -11,15 +11,16 @@ spec:
   installNamespace: kubegems-pai
   kind: helm
   url: https://charts.kubegems.io/kubegems
+  version: 1.0.8
   values:
     api:
       enabled: true
       image:
-        tag: main
+        tag: v1.0.8
     controller:
       enabled: true
       image:
-        tag: main
+        tag: v1.0.8
       ingress:
         baseHost: xpai.xiaoshiai.cn:30000
         className: default-gateway
@@ -33,7 +34,7 @@ spec:
       volcano:
         enabled: true
         vgpu:
-          enabled: false
+          enabled: true
     node:
       enabled: true
       image:
