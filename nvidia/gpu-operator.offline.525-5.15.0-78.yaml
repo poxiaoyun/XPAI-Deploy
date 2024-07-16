@@ -15,6 +15,9 @@ spec:
   #升级到v23.6.1 解决部署问题https://github.com/NVIDIA/gpu-operator/issues/569
   version: v23.6.1
   values:
+    driver:
+      usePrecompiled: true
+      version: 525
     node-feature-discovery:
       image:
         # repository: registry.k8s.io/nfd/node-feature-discovery
