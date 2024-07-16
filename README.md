@@ -51,8 +51,8 @@ sealos run registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-stack:1.24.6
 XPAI 离线扩展板
 
 ```
-sealos pull registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-extension:1.24.5
-sealos run registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-extension.1.24.5
+sealos pull registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-extension:1.24.6
+sealos run registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-extension.1.24.6
 ```
 
 ### 安装kubegems
@@ -97,9 +97,3 @@ kubectl apply -f operator.yaml
 kubectl apply -f 03.xpai.yaml
 ```
 
-### 导入XPAI 扩展镜像
-
-```
-sealos pull registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-extension:1.24.5
-sealos run registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-extension.1.24.5
-```
