@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gpu-operator
+spec:
+---
+apiVersion: plugins.kubegems.io/v1beta1
+kind: Plugin
+metadata:
+  name: gpu-operator
+  namespace: gpu-operator
+spec:
+  kind: helm
+  url: https://helm.ngc.nvidia.com/nvidia
+  #升级到v23.6.1 解决部署问题https://github.com/NVIDIA/gpu-operator/issues/569
+  version: v23.6.1
+  values:
+    driver:
+      usePrecompiled: true
+      version: 525
+    node-feature-discovery:
+      image:
+        # repository: registry.k8s.io/nfd/node-feature-discovery
+        repository: registry.cn-beijing.aliyuncs.com/kubegems/node-feature-discovery
+    dcgmExporter:
+      serviceMonitor:
+        enabled: true
+        honorLabels: true
+        interval: 30s
+    devicePlugin:
+      env:
+      - name: DEVICE_LIST_STRATEGY
+        value: volume-mounts
+    toolkit:
+      env:
+      - name: ACCEPT_NVIDIA_VISIBLE_DEVICES_AS_VOLUME_MOUNTS
+        value: "true" 
+      - name: ACCEPT_NVIDIA_VISIBLE_DEVICES_ENVVAR_WHEN_UNPRIVILEGED
+        value: "false"
+

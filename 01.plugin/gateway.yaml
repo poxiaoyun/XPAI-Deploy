@@ -1,0 +1,26 @@
+apiVersion: plugins.kubegems.io/v1beta1
+kind: Plugin
+metadata:
+  annotations:
+    plugins.kubegems.io/category: core/网关
+    plugins.kubegems.io/description: KubeGems 租户网关，基于 Nginx ingress
+    plugins.kubegems.io/health-check: deployments.apps/*
+    plugins.kubegems.io/required: "false"
+  name: gateway
+  namespace: kubegems-installer
+spec:
+  chart: gateway
+  installNamespace: kubegems-gateway
+  kind: template
+  url: https://charts.kubegems.io/kubegems
+  values:
+    gateway:
+      maxCpu: 500m
+      maxMemory: 512M
+      scrapeInterval: 30s
+  valuesFrom:
+  - kind: ConfigMap
+    name: kubegems-global-values
+    optional: true
+    prefix: global.
+  version: 0.3.2

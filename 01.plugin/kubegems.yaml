@@ -1,0 +1,110 @@
+apiVersion: plugins.kubegems.io/v1beta1
+kind: Plugin
+metadata:
+  name: global
+  namespace: kubegems-installer
+  annotations:
+    plugins.kubegems.io/category: core/KubeGems
+    plugins.kubegems.io/description: KubeGems global values.
+    plugins.kubegems.io/required: "true"
+spec:
+  kind: template
+  url: https://charts.kubegems.io/kubegems
+  chart: global
+  version: "1.0.0"
+  values:
+    clusterName: "manager-cluster"
+    # choose 'registry.cn-beijing.aliyuncs.com' or 'docker.io'
+    imageRegistry: registry.cn-beijing.aliyuncs.com
+    imageRepository: "kubegems"
+    storageClass: openebs-hostpath # change me to use a different storage class
+---
+apiVersion: plugins.kubegems.io/v1beta1
+kind: Plugin
+metadata:
+  name: kubegems
+  namespace: kubegems-installer
+  annotations:
+    plugins.kubegems.io/category: core/KubeGems
+    plugins.kubegems.io/description: KubeGems core service and dashboard.
+    plugins.kubegems.io/required: "true"
+spec:
+  kind: helm
+  url: https://charts.kubegems.io/kubegems
+  installNamespace: kubegems
+  version: 1.24.6
+  values:
+  values:
+    a: b
+    api:
+      image:
+        registry: registry.cn-hangzhou.aliyuncs.com
+        repository: xiaoshiai/kubegems
+        tag: v1.24.6-ee
+      replicaCount: 1
+    dashboard:
+      image:
+        registry: registry.cn-hangzhou.aliyuncs.com
+        repository: xiaoshiai/console
+        tag: v1.24.6-ee
+      replicaCount: 1
+      service:
+        type: NodePort
+    ingress:
+      enabled: true
+      hostname: xpai.xiaoshiai.cn
+      ingressClassName: default-gateway
+    argo-cd:
+      enabled: false
+    gitea:
+      enabled: false
+    kubegems-apps:
+      enabled: false
+  valuesFrom:
+    - kind: ConfigMap
+      name: "kubegems-global-values"
+      prefix: "global."
+    - kind: ConfigMap
+      name: kubegems-kubegems-local-values
+      optional: true
+      prefix: kubegems-local.
+    - kind: ConfigMap
+      name: kubegems-kubegems-pai-values
+      optional: true
+      prefix: kubegems-pai.
+    - kind: ConfigMap
+      name: kubegems-kubegems-apps-values
+      optional: true
+      prefix: kubegems-apps.
+---
+apiVersion: plugins.kubegems.io/v1beta1
+kind: Plugin
+metadata:
+  annotations:
+    plugins.kubegems.io/category: core/KubeGems
+    plugins.kubegems.io/description: KubeGems cluster agent components
+    plugins.kubegems.io/required: "true"
+  name: kubegems-local
+  namespace: kubegems-installer
+spec:
+  installNamespace: kubegems-local
+  kind: helm
+  url: https://charts.kubegems.io/kubegems
+  version: 1.24.5
+  valuesFrom:
+    - kind: ConfigMap
+      name: kubegems-global-values
+      optional: true
+      prefix: global.
+    - kind: ConfigMap
+      name: kubegems-monitoring-values
+      optional: true
+      prefix: monitoring.
+    - kind: ConfigMap
+      name: kubegems-tracing-values
+      optional: true
+      prefix: tracing.
+    - kind: ConfigMap
+      name: kubegems-logging-values
+      optional: true
+      prefix: logging.

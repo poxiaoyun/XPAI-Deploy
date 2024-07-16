@@ -1,0 +1,22 @@
+apiVersion: plugins.kubegems.io/v1beta1
+kind: Plugin
+metadata:
+  annotations:
+    plugins.kubegems.io/category: kubernetes/可观测性
+    plugins.kubegems.io/description: Prometheus 下的一个可用于收集主机指标数据(包括CPU、内存和磁盘)的服务
+    plugins.kubegems.io/health-check: ""
+    plugins.kubegems.io/required: "false"
+  name: prometheus-node-exporter
+  namespace: kubegems-installer
+spec:
+  chart: prometheus-node-exporter
+  installNamespace: kubegems-monitoring
+  kind: template
+  url: https://charts.kubegems.io/kubegems
+  values: {}
+  valuesFrom:
+  - kind: ConfigMap
+    name: kubegems-global-values
+    optional: true
+    prefix: global.
+  version: 3.3.0

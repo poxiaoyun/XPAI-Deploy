@@ -1,0 +1,47 @@
+apiVersion: plugins.kubegems.io/v1beta1
+kind: Plugin
+metadata:
+  annotations:
+    plugins.kubegems.io/category: core/可观测性
+    plugins.kubegems.io/description: KubeGems平台监控&告警控制器,包含Prometheus和AlertManager服务
+    plugins.kubegems.io/health-check: statefulsets.apps/*,deployments.apps/*
+    plugins.kubegems.io/required: "false"
+  creationTimestamp: "2024-05-23T09:15:49Z"
+  finalizers:
+  - plugins.kubegems.io/finalizer
+  generation: 1
+  name: monitoring
+  namespace: kubegems-installer
+  resourceVersion: "10206607"
+  uid: 47c62d71-0f15-425a-9357-08fbbb5f101a
+spec:
+  chart: monitoring
+  installNamespace: kubegems-monitoring
+  kind: template
+  url: https://charts.kubegems.io/kubegems
+  values:
+    alertmanager:
+      externalHost: alertmanager.kubegems.io
+      externalPort: 9093
+      maxCpu: 500m
+      maxMemory: 256Mi
+      replicas: 1
+      retention: 168h
+      volumeCapacity: 10Gi
+    prometheus:
+      externalHost: prometheus.kubegems.io
+      externalPort: 9090
+      maxCpu: "4"
+      maxMemory: 8Gi
+      retention: 30d
+      volumeCapacity: 200Gi
+  valuesFrom:
+  - kind: ConfigMap
+    name: kubegems-global-values
+    optional: true
+    prefix: global.
+  - kind: ConfigMap
+    name: kubegems-kubegems-local-values
+    optional: true
+    prefix: kubegems-local.
+  version: 44.3.4

@@ -1,0 +1,22 @@
+apiVersion: plugins.kubegems.io/v1beta1
+kind: Plugin
+metadata:
+  annotations:
+    plugins.kubegems.io/category: kubernetes/可观测性
+    plugins.kubegems.io/description: Metrics Server 是 Kubernetes 内置自动缩放管道的可扩展、高效的容器资源指标来源
+    plugins.kubegems.io/health-check: deployments.apps/metrics-server
+    plugins.kubegems.io/required: "false"
+  name: metrics-server
+  namespace: kubegems-installer
+spec:
+  chart: metrics-server
+  installNamespace: kube-system
+  kind: template
+  url: https://charts.kubegems.io/kubegems
+  values: {}
+  valuesFrom:
+  - kind: ConfigMap
+    name: kubegems-global-values
+    optional: true
+    prefix: global.
+  version: 3.8.2
