@@ -39,11 +39,20 @@ sealos run  docker.io/labring/openebs:v3.9.0  -e HELM_OPTS="--set localprovision
 --set localprovisioner.hostpathClass.isDefaultClass=true"
 ```
 
-### 导入XPAI Stack镜像
+### 导入XPAI镜像
+
+XPAI 全栈离线包
 
 ```
-sealos pull registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-stack:1.24.5
-sealos run registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-stack:1.24.5
+sealos pull registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-stack:1.24.6
+sealos run registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-stack:1.24.6
+```
+
+XPAI 离线扩展板
+
+```
+sealos pull registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-extension:1.24.5
+sealos run registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-extension.1.24.5
 ```
 
 ### 安装kubegems

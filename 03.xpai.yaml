@@ -38,7 +38,7 @@ spec:
     node:
       enabled: true
       image:
-        tag: main
+        tag: v1.0.8
   valuesFrom:
   - kind: ConfigMap
     name: kubegems-global-values
