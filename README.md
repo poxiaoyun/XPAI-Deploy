@@ -48,7 +48,7 @@ sealos pull registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-stack:1.24.6
 sealos run registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-stack:1.24.6
 ```
 
-XPAI 离线扩展板
+XPAI 扩展离线包
 
 ```
 sealos pull registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-extension:1.24.6
