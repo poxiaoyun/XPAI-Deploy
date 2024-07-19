@@ -28,7 +28,7 @@ cat hosts
 ansible -i hosts test -m ping
 ```
 
-#### 3.安装驱动
+#### 安装Ascend驱动
 
 ```
 ansible-playbook -i hosts install-driver-firmware.yaml
@@ -41,8 +41,25 @@ ansible-playbook -i hosts node-features-ascend.yaml
 ansible-playbook -i hosts install-docker-runtime.yaml
 ansible-playbook -i hosts before-install-deviceplugin.yaml
 ```
+##### hccn配置npu ip
 
-### 4.安装XPAI平台
+在每个晟腾服务器上运行如下命令
+
+> 需要规划一个IP地址范围，专门用于NPU设备。这些IP地址应该是您网络中未被使用的，并且最好在一个单独的子网中
+> 分配IP地址：为每个NPU设备分配一个唯一的IP地址。通常，这些地址会按照NPU设备的索引号顺序分配。
+
+```
+hccn_tool -i 0 -ip -s address 192.168.100.100 netmask 255.255.255.0
+hccn_tool -i 1 -ip -s address 192.168.100.101 netmask 255.255.255.0
+hccn_tool -i 2 -ip -s address 192.168.100.102 netmask 255.255.255.0
+hccn_tool -i 3 -ip -s address 192.168.100.103 netmask 255.255.255.0
+hccn_tool -i 4 -ip -s address 192.168.100.104 netmask 255.255.255.0
+hccn_tool -i 5 -ip -s address 192.168.100.105 netmask 255.255.255.0
+hccn_tool -i 6 -ip -s address 192.168.100.106 netmask 255.255.255.0
+hccn_tool -i 7 -ip -s address 192.168.100.107 netmask 255.255.255.0
+```
+
+### 3.安装XPAI平台
 
 按照正常流程安装
 
@@ -106,7 +123,7 @@ oom_score = 0
       default_runtime_name = "runc"
       [plugins."io.containerd.grpc.v1.cri".containerd.runtimes]
         [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc]
-          runtime_type = "io.containerd.runc.v2"
+          runtime_type = "io.containerd.runtime.v1.linux"
           runtime_engine = ""
           runtime_root = ""
           [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
