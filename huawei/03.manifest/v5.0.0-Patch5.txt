@@ -1,0 +1,8 @@
+registry.cn-beijing.aliyuncs.com/kubegems/ascend-k8sdeviceplugin:v5.0.0.5
+registry.cn-beijing.aliyuncs.com/kubegems/noded:v5.0.0.5
+registry.cn-beijing.aliyuncs.com/kubegems/hccl-controller:v5.0.0.5
+registry.cn-beijing.aliyuncs.com/kubegems/npu-exporter:v5.0.0.5
+registry.cn-beijing.aliyuncs.com/kubegems/ascend-k8sdeviceplugin:v5.0.0.5
+registry.cn-beijing.aliyuncs.com/kubegems/noded:v5.0.0.5
+registry.cn-beijing.aliyuncs.com/kubegems/hccl-controller:v5.0.0.5
+registry.cn-beijing.aliyuncs.com/kubegems/npu-exporter:v5.0.0.5

@@ -1,0 +1,6 @@
+resources:
+- device-plugin-310P-v5.0.0.5.yaml
+- device-plugin-310-v5.0.0.5.yaml
+- device-plugin-910-v5.0.0.5.yaml
+patchesStrategicMerge:
+- env.patch

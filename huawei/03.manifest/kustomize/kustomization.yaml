@@ -1,0 +1,5 @@
+resources:
+- ascend-device-plugin
+- ascend-hccl-controller
+- ascend-noded
+- ascend-npu-exporter

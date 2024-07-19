@@ -1,0 +1,61 @@
+---
+- name: Run script and write output to file on all nodes
+  hosts: test
+  become: yes  # 如果需要以root身份执行
+
+  tasks:
+    - name: Check cann-version.info and echo version
+      shell: |
+        if [[ -f /usr/local/Ascend/version.info ]]; then
+          version=$(cat /usr/local/Ascend/version.info)
+          echo "feature.node.kubernetes.io/npu-driver-version=${version#*=}"
+        else
+          echo "feature.node.kubernetes.io/npu-driver-version=unknown"
+        fi
+
+        # 获取 NPU 固件版本信息
+        if [[ -d /usr/local/Ascend/firmware ]]; then
+          if [[ -f /usr/local/Ascend/firmware/version.info ]]; then
+            fwversion=$(head -n 1 /usr/local/Ascend/firmware/version.info)
+            echo "feature.node.kubernetes.io/npu-firmware-version=${fwversion#*=}"
+          else
+            echo "feature.node.kubernetes.io/npu-firmware-version=unknown"
+          fi
+        else
+          echo "feature.node.kubernetes.io/npu-firmware-version=unknown"
+        fi
+
+        # 获取 CPU 制造商和型号名称
+        if command -v dmidecode &> /dev/null; then
+          cpu_manufacturer=$(sudo dmidecode -t processor | grep 'Manufacturer' | head -n 1 | awk -F: '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//')
+          cpu_model=$(sudo dmidecode -t processor | grep 'Version' | head -n 1 | awk -F: '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//')
+
+          # 检查是否成功获取到信息
+          if [ -n "$cpu_manufacturer" ] && [ -n "$cpu_model" ]; then
+            cpu_name="$cpu_manufacturer $cpu_model"
+            cpu_name_with_hyphens=${cpu_name// /-}
+            echo "feature.node.pai.kubegems.io/cpu-model.predefined-name=$cpu_name_with_hyphens"
+          else
+            echo "feature.node.pai.kubegems.io/cpu-model.predefined-name=unknown"
+          fi
+        else
+          echo "feature.node.pai.kubegems.io/cpu-model.predefined-name=unknown"
+        fi
+      register: script_output
+      changed_when: false  # 如果希望无论结果如何都不将状态视为已更改
+
+    - name: Ensure the /etc/kubernetes/node-feature-discovery/features.d directory exists
+      file:
+        path: /etc/kubernetes/node-feature-discovery/features.d
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Write script output to /etc/kubernetes/node-feature-discovery/features.d/my-features
+      copy:
+        content: "{{ script_output.stdout }}"
+        dest: /etc/kubernetes/node-feature-discovery/features.d/my-features
+        owner: root
+        group: root
+        mode: '0644'

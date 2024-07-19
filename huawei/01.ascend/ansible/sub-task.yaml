@@ -1,0 +1,19 @@
+---
+- name: Check if file exists
+  stat:
+    path: "/root/{{ item.name }}"
+  register: file_stat
+
+- name: Download file if not exists
+  get_url:
+    url: "{{ item.url }}"
+    dest: "/root/{{ item.name }}"
+  when: not file_stat.stat.exists
+
+- name: Set file permissions to 0755
+  file:
+    path: "/root/{{ item.name }}"
+    mode: '0755'
+
+- name: Execute install
+  command: "/root/{{ item.name }} --quiet --full"

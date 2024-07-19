@@ -1,0 +1,48 @@
+- name: Install Ascend Docker Runtime
+  hosts: all
+  become: yes
+  vars:
+    download_path: "/root/Ascend-docker-runtime_5.0.0.5_linux-aarch64.run"
+
+  tasks:
+    - name: Check if Ascend Docker Runtime installer exists
+      ansible.builtin.stat:
+        path: "{{ download_path }}"
+      register: runtime_file
+
+    - name: Download Ascend Docker Runtime installer
+      get_url:
+        url: "https://gitee.com/ascend/ascend-docker-runtime/releases/download/v5.0.0-Patch5/Ascend-docker-runtime_5.0.0.5_linux-aarch64.run"
+        dest: "{{ download_path }}"
+        mode: '0755'
+        force: no
+      when: not runtime_file.stat.exists
+
+    - name: Set execute permission on the installer
+      ansible.builtin.file:
+        path: "{{ download_path }}"
+        mode: '0755'
+      when: not runtime_file.stat.exists
+
+    - name: Execute the installer
+      ansible.builtin.command:
+        cmd: "{{ download_path }} --install"
+      become: yes
+      when: not runtime_file.stat.exists
+
+    - name: Backup existing containerd config file
+      ansible.builtin.copy:
+        src: /etc/containerd/config.toml
+        dest: /root/config.toml.bak
+        remote_src: yes
+
+    - name: Upload new containerd config file
+      ansible.builtin.copy:
+        src: config.toml
+        dest: /etc/containerd/config.toml
+        backup: yes
+
+    - name: Restart containerd service
+      ansible.builtin.systemd:
+        name: containerd
+        state: restarted

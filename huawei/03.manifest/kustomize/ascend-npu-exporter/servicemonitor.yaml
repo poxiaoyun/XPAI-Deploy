@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    prometheus.io/scrape: "true"
+  labels:
+    app: npu-exporter
+  name: npu-exporter
+  namespace: npu-exporter
+spec:
+  internalTrafficPolicy: Cluster
+  ipFamilies:
+  - IPv4
+  ipFamilyPolicy: SingleStack
+  ports:
+  - name: npu-metrics
+    port: 8082
+    protocol: TCP
+    targetPort: 8082
+  selector:
+    app: npu-exporter
+  sessionAffinity: None
+  type: ClusterIP
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    name: npu-exporter
+  name: npu-exporter
+  namespace: npu-exporter
+spec:
+  endpoints:
+  - bearerTokenSecret:
+      key: ""
+    honorLabels: true
+    interval: 30s
+    path: /metrics
+    port: npu-metrics
+  jobLabel: app
+  namespaceSelector:
+    matchNames:
+    - npu-exporter
+  selector:
+    matchLabels:
+      app: npu-exporter

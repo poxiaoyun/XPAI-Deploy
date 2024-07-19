@@ -1,0 +1,43 @@
+---
+- name: Configure system for mindx-dl
+  hosts: test
+  become: yes
+
+  tasks:
+    # - name: Ensure group HwHiAiUser exists
+    #   ansible.builtin.group:
+    #     name: HwHiAiUser
+    #     state: present
+
+    - name: Check if user hwMindX exists
+      command: id hwMindX
+      register: user_exists
+      ignore_errors: true
+
+    - name: Create user hwMindX if not exists
+      ansible.builtin.user:
+        name: hwMindX
+        uid: 9000
+        group: HwHiAiUser
+        shell: /sbin/nologin
+        create_home: yes
+        home: /home/hwMindX
+      when: user_exists.rc != 0
+
+    - name: Create and manage directories under /var/log/mindx-dl
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        state: directory
+        mode: '0750'
+        owner: "{{ item.owner }}"
+        group: "{{ item.group }}"
+      loop:
+        - { path: "/var/log/mindx-dl/devicePlugin", owner: "root", group: "root" }
+        - { path: "/var/log/mindx-dl/npu-exporter", owner: "root", group: "root" }
+        - { path: "/var/log/mindx-dl/noded", owner: "hwMindX", group: "HwHiAiUser" }
+        - { path: "/var/log/mindx-dl/elastic", owner: "hwMindX", group: "HwHiAiUser" }
+        - { path: "/var/log/mindx-dl/hccl-controller", owner: "hwMindX", group: "HwHiAiUser" }
+        - { path: "/var/log/mindx-dl/resilience-controller", owner: "hwMindX", group: "HwHiAiUser" }
+        - { path: "/var/log/mindx-dl/ascend-operator", owner: "hwMindX", group: "HwHiAiUser" }
+        - { path: "/var/log/mindx-dl/volcano-controller", owner: "hwMindX", group: "HwHiAiUser" }
+        - { path: "/var/log/mindx-dl/cert-importer", owner: "root", group: "root" }

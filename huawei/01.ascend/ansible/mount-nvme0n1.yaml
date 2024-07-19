@@ -1,0 +1,32 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Check if /dev/nvme0n1 is already formatted
+      command: blkid /dev/nvme0n1
+      register: nvme_blkid
+      changed_when: false
+      failed_when: false
+      ignore_errors: true
+
+    - name: Ensure the mount point directory exists
+      ansible.builtin.file:
+        path: /data/containerd
+        state: directory
+        mode: '0755'
+
+    - name: Format /dev/nvme0n1 as ext4
+      community.general.filesystem:
+        fstype: ext4
+        dev: /dev/nvme0n1
+      when: nvme_blkid.stdout == ""
+      # 注意：这个任务会删除 /dev/nvme0n1 上的所有数据
+
+    - name: Mount nvme0n1 to /data/containerd and update /etc/fstab
+      ansible.posix.mount:
+        path: /data/containerd
+        src: /dev/nvme0n1
+        fstype: ext4
+        opts: defaults
+        state: mounted
+        dump: 0
+        passno: 2

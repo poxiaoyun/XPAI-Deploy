@@ -1,0 +1,3 @@
+resources:
+- npu-exporter-v5.0.0.5.yaml
+- servicemonitor.yaml

@@ -1,0 +1,38 @@
+apiVersion: nfd.k8s-sigs.io/v1alpha1
+kind: NodeFeatureRule
+metadata:
+  name: huawei-ascend-features
+spec:
+  rules:
+    - name: "Ascend-910B"
+      labels:
+        ascend-accelerator: "huawei-Ascend910"
+      matchFeatures:
+        - feature: pci.device
+          matchExpressions:
+            vendor: {op: In, value: ["19e5"]}
+            device: {op: In, value: ["d802"]}
+    - name: "Ascend-910A"
+      labels:
+        ascend-accelerator: "huawei-Ascend910"
+      matchFeatures:
+        - feature: pci.device
+          matchExpressions:
+            vendor: {op: In, value: ["19e5"]}
+            device: {op: In, value: ["d801"]}
+    - name: "Ascend-310"
+      labels:
+        ascend-accelerator: "huawei-Ascend310"
+      matchFeatures:
+        - feature: pci.device
+          matchExpressions:
+            vendor: {op: In, value: ["19e5"]}
+            device: {op: In, value: ["d100"]}
+    - name: "Ascend-310P"
+      labels:
+        ascend-accelerator: "huawei-Ascend310P"
+      matchFeatures:
+        - feature: pci.device
+          matchExpressions:
+            vendor: {op: In, value: ["19e5"]}
+            device: {op: In, value: ["d500"]}
