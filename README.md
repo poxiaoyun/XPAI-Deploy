@@ -54,6 +54,9 @@ XPAI 扩展离线包
 sealos pull registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-extension:1.24.6
 sealos run registry.cn-hangzhou.aliyuncs.com/xiaoshiai/xpai-extension.1.24.6
 ```
+### 安装KubeGems
+
+```
 cd 01.plugin
 
 kubectl apply -f installer.yaml
