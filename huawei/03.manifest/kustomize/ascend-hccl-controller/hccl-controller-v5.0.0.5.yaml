@@ -62,7 +62,7 @@ spec:
           readOnlyRootFilesystem: true
           capabilities:
             drop: ["ALL"]
-        image: hccl-controller:v5.0.0.5
+        image: registry.cn-beijing.aliyuncs.com/kubegems/hccl-controller:v5.0.0.5
         resources:
           requests:
               memory: 300Mi
@@ -70,7 +70,7 @@ spec:
           limits:
               memory: 300Mi
               cpu: 500m
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         command: [ "/bin/bash", "-c", "--"]
         args: ["umask 027;hccl-controller
          -logFile=/var/log/mindx-dl/hccl-controller/hccl-controller.log  -logLevel=0   " ]

@@ -48,7 +48,7 @@ spec:
         workerselector: dls-worker-node
       containers:
       - name: npu-exporter
-        image: npu-exporter:v5.0.0.5
+        image: registry.cn-beijing.aliyuncs.com/kubegems/npu-exporter:v5.0.0.5
         resources:
           requests:
               memory: 1000Mi
@@ -56,7 +56,7 @@ spec:
           limits:
               memory: 1000Mi
               cpu: 1000m
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         command: [ "/bin/bash", "-c", "--"]
         # pair firstly
         args: [ "umask 027;npu-exporter -port=8082 -ip=0.0.0.0  -updateTime=5

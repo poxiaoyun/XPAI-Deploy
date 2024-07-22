@@ -69,7 +69,7 @@ spec:
         accelerator: huawei-Ascend910
       serviceAccountName: ascend-device-plugin-sa-910
       containers:
-      - image: ascend-k8sdeviceplugin:v5.0.0.5
+      - image: registry.cn-beijing.aliyuncs.com/kubegems/aascend-k8sdeviceplugin:v5.0.0.5
         name: device-plugin-01
         resources:
           requests:
@@ -84,7 +84,7 @@ spec:
         securityContext:
           privileged: true
           readOnlyRootFilesystem: true
-        imagePullPolicy: Never
+        imagePullPolicy: IfNotPresent
         volumeMounts:
           - name: device-plugin
             mountPath: /var/lib/kubelet/device-plugins
