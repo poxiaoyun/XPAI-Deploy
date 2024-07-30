@@ -1,4 +1,4 @@
-###1. too many openfiles
+### 1. too many openfiles
 
 临时解决方法
 
@@ -18,7 +18,7 @@ root - nproc 1048576
 
 重启机器
 
-###2. 在线安装NVIDIA驱动
+### 2. 在线安装NVIDIA驱动
 
 默认情况下gpu-operator会自动编译安装GPU驱动，期间会同步和下载APT镜像源来更新编译环境，请保持网络的畅通。
 
@@ -64,7 +64,7 @@ $ apt install nvidia-fabricmanager-535 libnvidia-nscq-535
       enabled: false
 ```
 
-###3. 离线安装NVIDIA GPU驱动
+### 3. 离线安装NVIDIA GPU驱动
 
 NVIDIA驱动由gpu-operator自动安装，离线场景下需采用预编译安装模式
 
