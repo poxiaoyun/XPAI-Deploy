@@ -125,3 +125,14 @@ APT::Periodic::Unattended-Upgrade "0";
 systemctl stop unattended-upgrades
 systemctl disable unattended-upgrades
 ```
+
+### Ubuntu禁止内核更新
+
+对Ubuntu Server能访问互联网且使用Nvidia预编译镜像安装GPU驱动的机器，由于预编译镜像和Linux Kernel Version保持对应，经常会遇见内核更新导致驱动丢失的情况，此时我们可以关闭Ubuntu的Kernel自动更新。
+
+```
+# 禁用内核更新
+sudo apt-mark hold linux-generic linux-image-generic linux-headers-generic
+# 恢复内核更新
+sudo apt-mark unhold linux-generic linux-image-generic linux-headers-generic
+```
