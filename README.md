@@ -96,3 +96,32 @@ kubectl apply -f operator.yaml
 kubectl apply -f 03.xpai.yaml
 ```
 
+## 备注
+
+### Ubuntu关闭APT自动更新
+
+```
+$ dpkg-reconfigure unattended-upgrades
+
+debconf: unable to initialize frontend: Dialog
+debconf: (No usable dialog-like program is installed, so the dialog based frontend cannot be used. at /usr/share/perl5/Debconf/FrontEnd/Dialog.pm line 78.)
+debconf: falling back to frontend: Readline
+Configuring unattended-upgrades
+-------------------------------
+
+Applying updates on a frequent basis is an important part of keeping systems secure. By default, updates need
+to be applied manually using package management tools. Alternatively, you can choose to have this system
+automatically download and install important updates.
+
+Automatically download and install stable updates? [yes/no] no
+
+Replacing config file /etc/apt/apt.conf.d/20auto-upgrades with new version
+
+$ cat /etc/apt/apt.conf.d/20auto-upgrades
+APT::Periodic::Update-Package-Lists "0";
+APT::Periodic::Unattended-Upgrade "0";
+
+## 禁用 unattended-upgrades 服务
+systemctl stop unattended-upgrades
+systemctl disable unattended-upgrades
+```
