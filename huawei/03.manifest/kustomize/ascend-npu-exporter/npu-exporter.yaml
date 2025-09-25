@@ -3,31 +3,6 @@ kind: Namespace
 metadata:
   name: npu-exporter
 ---
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: exporter-network-policy
-  namespace: npu-exporter
-spec:
-  podSelector:
-    matchLabels:
-      app: npu-exporter
-  policyTypes:
-    - Ingress
-    - Egress
-  ingress:
-    - from:
-        - namespaceSelector: {}
-          podSelector:
-            matchLabels:
-              app: prometheus
-  egress:
-    - to:
-        - namespaceSelector: {}
-          podSelector:
-            matchLabels:
-              app: prometheus
----
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -48,7 +23,7 @@ spec:
         workerselector: dls-worker-node
       containers:
       - name: npu-exporter
-        image: registry.cn-beijing.aliyuncs.com/kubegems/npu-exporter:v5.0.0.5
+        image: registry.cn-beijing.aliyuncs.com/kubegems/npu-exporter:v6.0.0-rc1
         resources:
           requests:
               memory: 1000Mi
@@ -60,7 +35,7 @@ spec:
         command: [ "/bin/bash", "-c", "--"]
         # pair firstly
         args: [ "umask 027;npu-exporter -port=8082 -ip=0.0.0.0  -updateTime=5
-                 -logFile=/var/log/mindx-dl/npu-exporter/npu-exporter.log -logLevel=0 -containerMode=docker" ]
+                 -logFile=/var/log/mindx-dl/npu-exporter/npu-exporter.log -logLevel=0 -containerMode=containerd" ]
         securityContext:
           privileged: true
           readOnlyRootFilesystem: true

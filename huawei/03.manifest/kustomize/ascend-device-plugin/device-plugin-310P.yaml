@@ -78,7 +78,7 @@ spec:
         accelerator: huawei-Ascend310P
       serviceAccountName: ascend-device-plugin-sa-310p
       containers:
-        - image: ascend-k8sdeviceplugin:v5.0.0.5
+        - image: registry.cn-beijing.aliyuncs.com/kubegems/ascend-k8sdeviceplugin:v6.0.0-rc1
           name: device-plugin-01
           resources:
             requests:

@@ -2,7 +2,7 @@
 
 mkdir -p kustomize
 
-version="v5.0.0-Patch5"
+version="v6.0.0-rc1"
 
 create_kustomization() {
     echo "resources:" > kustomization.yaml

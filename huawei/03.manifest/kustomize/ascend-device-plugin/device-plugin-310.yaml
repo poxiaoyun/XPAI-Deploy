@@ -1,20 +1,20 @@
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: ascend-device-plugin-sa-910
+  name: ascend-device-plugin-sa-310
   namespace: kube-system
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: pods-node-ascend-device-plugin-role-910
+  name: pods-node-ascend-device-plugin-role-310
 rules:
   - apiGroups: [""]
     resources: ["pods"]
     verbs: ["get", "list", "update", "watch", "patch"]
   - apiGroups: [""]
     resources: ["nodes"]
-    verbs: ["get"]
+    verbs: ["get", "patch"]
   - apiGroups: [""]
     resources: ["nodes/status"]
     verbs: ["get", "patch"]
@@ -25,20 +25,20 @@ rules:
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: pods-node-ascend-device-plugin-rolebinding-910
+  name: pods-node-ascend-device-plugin-rolebinding-310
 subjects:
   - kind: ServiceAccount
-    name: ascend-device-plugin-sa-910
+    name: ascend-device-plugin-sa-310
     namespace: kube-system
 roleRef:
   kind: ClusterRole
-  name: pods-node-ascend-device-plugin-role-910
+  name: pods-node-ascend-device-plugin-role-310
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: ascend-device-plugin-daemonset
+  name: ascend-device-plugin2-daemonset
   namespace: kube-system
 spec:
   selector:
@@ -57,7 +57,7 @@ spec:
       tolerations:
         - key: CriticalAddonsOnly
           operator: Exists
-        - key: huawei.com/Ascend910
+        - key: huawei.com/Ascend310
           operator: Exists
           effect: NoSchedule
         - key: "device-plugin"
@@ -66,10 +66,10 @@ spec:
           effect: NoSchedule
       priorityClassName: "system-node-critical"
       nodeSelector:
-        accelerator: huawei-Ascend910
-      serviceAccountName: ascend-device-plugin-sa-910
+        accelerator: huawei-Ascend310
+      serviceAccountName: ascend-device-plugin-sa-310
       containers:
-      - image: registry.cn-beijing.aliyuncs.com/kubegems/aascend-k8sdeviceplugin:v5.0.0.5
+      - image: registry.cn-beijing.aliyuncs.com/kubegems/ascend-k8sdeviceplugin:v6.0.0-rc1
         name: device-plugin-01
         resources:
           requests:
@@ -84,7 +84,7 @@ spec:
         securityContext:
           privileged: true
           readOnlyRootFilesystem: true
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Never
         volumeMounts:
           - name: device-plugin
             mountPath: /var/lib/kubelet/device-plugins

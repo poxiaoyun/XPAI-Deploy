@@ -69,14 +69,14 @@ hccn_tool -i 7 -ip -s address 192.168.100.107 netmask 255.255.255.0
 helm install --create-namespace -n mindx-dl xpai 02.nfd
 
 cd 03.manifest/ascend-device-plugin
-kubectl apply -f .
+kubectl apply -k .
 
 cd 03.manifest/ascend-hccl-controller
-kubectl apply -f .
+kubectl apply -k .
 
 cd 03.manifest/ascend-npu-exporter
 kubectl create ns npu-exporter
-kubectl apply -f .
+kubectl apply -k .
 ```
 
 配置containerd配置
@@ -140,7 +140,7 @@ oom_score = 0
 
 ```
 #标记910b服务器
-kubectl label node <node>  accelerator=huawei-Ascend910
+kubectl label node <node> accelerator=huawei-Ascend910
 kubectl label node <node> feature.node.kubernetes.io/ascend-accelerator=huawei-Ascend910
 
 #标记dls节点
