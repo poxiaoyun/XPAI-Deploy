@@ -14,16 +14,22 @@ spec:
       app: npu-exporter
   template:
     metadata:
+      ##### For Kubernetes versions lower than 1.19, seccomp is used with annotations.
       annotations:
         seccomp.security.alpha.kubernetes.io/pod: runtime/default
       labels:
         app: npu-exporter
     spec:
+      ##### For Kubernetes version 1.19 and above, seccomp is used with securityContext:seccompProfile
+#      securityContext:
+#        seccompProfile:
+#          type: RuntimeDefault
+      automountServiceAccountToken: false
       nodeSelector:
         workerselector: dls-worker-node
       containers:
       - name: npu-exporter
-        image: registry.cn-beijing.aliyuncs.com/kubegems/npu-exporter:v6.0.0-rc1
+        image: swr.cn-south-1.myhuaweicloud.com/ascendhub/npu-exporter:v7.1.RC1
         resources:
           requests:
               memory: 1000Mi
@@ -57,9 +63,6 @@ spec:
           - name: ascend-dcmi
             mountPath: /usr/local/dcmi
             readOnly: true
-          - name: sys
-            mountPath: /sys
-            readOnly: true
           - name: docker-shim  # delete when only use containerd or isula
             mountPath: /var/run/dockershim.sock
             readOnly: true
@@ -91,9 +94,6 @@ spec:
         - name: ascend-dcmi
           hostPath:
             path: /usr/local/dcmi
-        - name: sys
-          hostPath:
-            path: /sys
         - name: docker-shim # delete when only use containerd or isula
           hostPath:
             path: /var/run/dockershim.sock
@@ -112,4 +112,3 @@ spec:
         - name: tmp
           hostPath:
             path: /tmp
-

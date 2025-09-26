@@ -14,13 +14,19 @@ rules:
     verbs: ["get", "list", "update", "watch", "patch"]
   - apiGroups: [""]
     resources: ["nodes"]
-    verbs: ["get"]
+    verbs: ["get", "patch"]
+  - apiGroups: [ "" ]
+    resources: [ "nodes/proxy" ]
+    verbs: [ "get" ]
   - apiGroups: [""]
     resources: ["nodes/status"]
-    verbs: ["get", "patch"]
+    verbs: ["get", "patch", "update"]
   - apiGroups: [""]
     resources: ["configmaps"]
-    verbs: ["get", "create", "update"]
+    verbs: ["get", "create", "update", "list", "watch"]
+  - apiGroups: [ "" ]
+    resources: [ "events" ]
+    verbs: [ "create" ]
 ---
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
@@ -69,7 +75,7 @@ spec:
         accelerator: huawei-Ascend910
       serviceAccountName: ascend-device-plugin-sa-910
       containers:
-      - image: registry.cn-beijing.aliyuncs.com/kubegems/ascend-k8sdeviceplugin:v6.0.0-rc1
+      - image: swr.cn-south-1.myhuaweicloud.com/ascendhub/ascend-k8sdeviceplugin:v7.1.RC1
         name: device-plugin-01
         resources:
           requests:
@@ -97,11 +103,22 @@ spec:
             mountPath: /var/log/mindx-dl/devicePlugin
           - name: tmp
             mountPath: /tmp
+          - name: lingqu-log
+            mountPath: /var/log/lingqu
+          - name: localtime
+            mountPath: /etc/localtime
+            readOnly: true
+          - name: data-trace-file-dir
+            mountPath: /user/cluster-info/datatrace-config
         env:
           - name: NODE_NAME
             valueFrom:
               fieldRef:
                 fieldPath: spec.nodeName
+          - name: HOST_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
       volumes:
         - name: device-plugin
           hostPath:
@@ -116,6 +133,17 @@ spec:
           hostPath:
             path: /var/log/mindx-dl/devicePlugin
             type: Directory
+        - name: data-trace-file-dir
+          hostPath:
+            path: /user/cluster-info/datatrace-config
+            type: DirectoryOrCreate
         - name: tmp
           hostPath:
             path: /tmp
+        - name: lingqu-log
+          hostPath:
+            path: /var/log/lingqu
+            type: DirectoryOrCreate
+        - name: localtime
+          hostPath:
+            path: /etc/localtime

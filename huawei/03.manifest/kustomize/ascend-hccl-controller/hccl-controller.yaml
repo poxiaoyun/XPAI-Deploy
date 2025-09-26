@@ -62,7 +62,7 @@ spec:
           readOnlyRootFilesystem: true
           capabilities:
             drop: ["ALL"]
-        image: registry.cn-beijing.aliyuncs.com/kubegems/hccl-controller:v6.0.0-rc1
+        image: swr.cn-south-1.myhuaweicloud.com/ascendhub/hccl-controller:v6.0.RC3
         resources:
           requests:
               memory: 300Mi
